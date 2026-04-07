@@ -1,0 +1,21 @@
+dataset:
+  path: examples/data/train.csv
+  label_column: label
+  test_size: 0.25
+  shuffle: true
+  random_seed: 7
+
+model:
+  kind: template
+  params: {}
+
+training:
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1
+
+output:
+  model_path: artifacts/model.json
+  report_path: artifacts/report.json

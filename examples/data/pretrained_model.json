@@ -1,0 +1,16 @@
+{
+  "model_type": "template",
+  "class_name": "TemplateCentroidClassifier",
+  "state": {
+    "class_centroids": {
+      "negative": [
+        -1.0,
+        -1.025
+      ],
+      "positive": [
+        0.975,
+        1.05
+      ]
+    }
+  }
+}
