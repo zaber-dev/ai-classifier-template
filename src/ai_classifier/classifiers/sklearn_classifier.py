@@ -1,25 +1,31 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import importlib
 from typing import Any
 
 from ai_classifier.core.base import BaseClassifier
 from ai_classifier.core.exceptions import DataFormatError
 
 
-def _safe_import_sklearn() -> Any:
+def _safe_import_sklearn() -> dict[str, type[Any]]:
     try:
-        from sklearn.ensemble import RandomForestClassifier
-        from sklearn.linear_model import LogisticRegression
-        from sklearn.svm import SVC
-    except ImportError as exc:
+        ensemble = importlib.import_module("sklearn.ensemble")
+        linear_model = importlib.import_module("sklearn.linear_model")
+        svm = importlib.import_module("sklearn.svm")
+
+        random_forest_cls = getattr(ensemble, "RandomForestClassifier")
+        logistic_regression_cls = getattr(linear_model, "LogisticRegression")
+        svc_cls = getattr(svm, "SVC")
+    except (ImportError, AttributeError) as exc:
         raise ImportError(
             "scikit-learn is required for model.kind='sklearn'. Install with: pip install .[ml]"
         ) from exc
+
     return {
-        "logistic_regression": LogisticRegression,
-        "random_forest": RandomForestClassifier,
-        "svm": SVC,
+        "logistic_regression": logistic_regression_cls,
+        "random_forest": random_forest_cls,
+        "svm": svc_cls,
     }
 
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
 from ai_classifier.classifiers.sklearn_classifier import SklearnClassifierAdapter
 from ai_classifier.classifiers.template_classifier import TemplateCentroidClassifier
@@ -13,12 +14,13 @@ from ai_classifier.training.metrics import REGISTRY
 from ai_classifier.utils.serialization import save_model
 
 
-def _build_classifier(kind: str, params: dict[str, object]) -> BaseClassifier:
+def _build_classifier(kind: str, params: dict[str, Any]) -> BaseClassifier:
     if kind == "template":
         return TemplateCentroidClassifier()
     if kind == "sklearn":
         algorithm = str(params.get("algorithm", "logistic_regression"))
-        model_params = dict(params.get("model_params", {}))
+        raw_model_params = params.get("model_params", {})
+        model_params = raw_model_params if isinstance(raw_model_params, dict) else {}
         return SklearnClassifierAdapter(algorithm=algorithm, params=model_params)
     raise ValueError(f"Unsupported model kind: {kind}")
 
